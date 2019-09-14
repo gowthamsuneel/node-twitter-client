@@ -17,14 +17,8 @@ This is proof of concept to access twitter api is from client libraries like Nod
 
 **Services**
 ****
- - This login api is redirecting to twitter login page once user is validated it is redirects to http://localhost:4000/auth/ url which contains logged in user data.
-		http://localhost:4000/auth/login
+- GET - http://localhost:4000/auth/login
+- GET  - http://localhost:4000/twitter/data
+- GET - http://localhost:4000/twitter/links
+- POST - http://localhost:4000/twitter/filter
 
-- This will fetch the data from mongodb which is inserted once user logged in success.
-		http://localhost:4000/twitter/data
-- This will give total count of url's which is shared by users.
- 		http://localhost:4000/twitter/links
-- Filter API
-		http://localhost:4000/twitter/filter
-
- 
