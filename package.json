@@ -1,0 +1,25 @@
+{
+  "name": "twitter-application",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv-safe": "^8.1.0",
+    "express": "~4.16.1",
+    "express-session": "^1.16.2",
+    "http-errors": "~1.6.3",
+    "mongoose": "^5.7.0",
+    "morgan": "~1.9.1",
+    "oauth": "^0.9.15",
+    "passport": "^0.4.0",
+    "passport-twitter": "^1.0.4",
+    "pug": "2.0.0-beta11",
+    "twit": "^2.2.11",
+    "twitter-js-client": "0.0.5",
+    "util": "^0.12.1"
+  }
+}
