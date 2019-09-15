@@ -18,7 +18,7 @@ This is proof of concept to access twitter api is from client libraries like Nod
 **Services**
 ****
 - GET - http://localhost:4000/auth/login
-- GET  - http://localhost:4000/twitter/data
+- GET  - http://localhost:4000/twitter/tweets
 - GET - http://localhost:4000/twitter/links
 - POST - http://localhost:4000/twitter/filter -> {location : 'Hyderabad'}
 - View Tweets - http://localhost:4000/index.html
