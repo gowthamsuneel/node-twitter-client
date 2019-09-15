@@ -1,30 +1,16 @@
 var express = require('express');
 var router = express.Router();
-const { Twitter, Links }  = require('../model/twitter.model');
-const { consumerKey, consumerSecret, access_token_secret, access_token } = require('../config/vars')
-
+const { Twitter, Links, Tokens }  = require('../model/twitter.model');
+const { consumerKey, consumerSecret, count } = require('../config/vars')
 var Twit = require('twit')
-//Get this data from your twitter apps dashboard
-var config = {
-  consumer_key: consumerKey,
-  consumer_secret: consumerSecret ,
-  access_token: access_token,
-  access_token_secret: access_token_secret,
-  timeout_ms : 60*1000,
-  strictSSL :  false, 
-}
-const client = new Twit(config);
 
-let saveTweet = async(data) => {
-  try {
-    let tweet = new Twitter ({user : "Suneel", tweet : "Suneel"})
-    let response = await tweet.save()    
-  } catch (e) {
-    console.log(e);
-  }
 
-}
-
+/**
+ * Aggreation function
+ * To find which user has share more links
+ * @param {*} req 
+ * @param {*} res 
+ */
 let sharedLinks = (req,res) =>{
   try {
     Links.aggregate([{$group:{_id:{user:"$user"},count :{$sum:1}}}]).then(data=>{
@@ -37,7 +23,11 @@ let sharedLinks = (req,res) =>{
   }
 }
 
-
+/**
+ * Common function 
+ * To use to fetch data from database
+ * @param {*} query 
+ */
 let dataFetch = (query) =>{
     return new Promise((resolve,reject)=>{
       Twitter.find(query).then(data=>{
@@ -48,6 +38,11 @@ let dataFetch = (query) =>{
     })
 }
 
+/**
+ * Filter the tweets based on criteria list like location etc
+ * @param {*} req 
+ * @param {*} res 
+ */
 let filter = (req,res) =>{
   try {
     dataFetch({'user.location': req.body.location}).then(data=>{
@@ -60,6 +55,11 @@ let filter = (req,res) =>{
   }
 }
 
+/**
+ * Search hastaged tweets
+ * @param {*} req 
+ * @param {*} res 
+ */
 let hashTag = (req,res) => {
   try {
     dataFetch({'entities.hashtags': req.body.hashtags}).then(data=>{
@@ -72,6 +72,12 @@ let hashTag = (req,res) => {
   }
 }
 
+
+/**
+ * Fetch tweets from local database
+ * @param {*} req 
+ * @param {*} res 
+ */
 let getDBTweets = (req,res) =>{
   try {
     dataFetch({}).then(data=>{
@@ -85,7 +91,33 @@ let getDBTweets = (req,res) =>{
 
 }
 
-/** Helper Function */
+/**
+ * Save loggedIn user access tokens  
+ * @param {*} response 
+ */
+let saveTokens = async (response)=>{
+  try {
+   let filter = {
+            user : response.profile.username
+          }
+    let update = {
+        token : response.token,
+        token_secret : response.tokenSecret
+   };
+   let data = await Tokens.findOneAndUpdate(filter, update,  {
+    new: true,
+    upsert: true
+  })
+   
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+/** 
+ * Helper functin to find tweet contains URL
+ * 
+ */
 let max_id = 0;
 let since_id = 0;
 let twitterData =[];
@@ -127,9 +159,29 @@ function findTweethasURL(data){
 }
 
 
-var params = {count : 200}
-let getTweetsFromTwitterAPI = async(params) =>{
+
+
+/**
+ * Get logged in user tweets from twitter API and save into database
+ * @param {*} req 
+ * @param {*} params 
+ */
+var params = {count : count}
+var config = {
+  consumer_key: consumerKey,
+  consumer_secret: consumerSecret ,
+  access_token: "",
+  access_token_secret: "",
+  timeout_ms : 60*1000,
+  strictSSL :  false, 
+}
+
+let getTweetsFromTwitterAPI = async(req, params) =>{
   try {
+    let keys = await Tokens.find({user : req.user.username})
+    config.access_token = keys[0].token;
+    config.access_token_secret = keys[0].token_secret;
+    const client = new Twit(config);
     client
       .get('statuses/home_timeline', params)
       .then(async timeline => {
@@ -140,7 +192,7 @@ let getTweetsFromTwitterAPI = async(params) =>{
           params.max_id= twitterData[twitterData.length-1].id -1
           twitterData = [];
           urlArr = [];
-          getTweetsFromTwitterAPI(params) 
+          getTweetsFromTwitterAPI(req,params) 
         } 
 
       })
@@ -150,6 +202,5 @@ let getTweetsFromTwitterAPI = async(params) =>{
   }
 } 
 
-
-
-module.exports = { saveTweet, getTweetsFromTwitterAPI, sharedLinks, filter, hashTag, getDBTweets };
+module.exports = { getTweetsFromTwitterAPI, sharedLinks, 
+                    filter, hashTag, getDBTweets, saveTokens };

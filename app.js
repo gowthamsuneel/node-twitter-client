@@ -4,17 +4,20 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('./config/mongoose');
-var authRouter = require('./routes/auth');
-var commonRouter = require('./routes/common.routes');
+var authRouter = require('./routes/auth.routes');
+var twitterRouter = require('./routes/twitter.routes');
 var passport = require('passport');
 var Strategy = require('passport-twitter').Strategy;
 var session = require('express-session');
 const { consumerKey, consumerSecret, callbackURL } = require('./config/vars')
+const { saveTokens } = require('./controllers/twitter.controller')
 passport.use(new Strategy({
     consumerKey: consumerKey,
     consumerSecret: consumerSecret ,
     callbackURL: callbackURL
 }, function(token, tokenSecret, profile, callback) {
+    let data = {token:token, tokenSecret:tokenSecret, profile:profile}
+    saveTokens(data);
     return callback(null, profile);
 }));
 
@@ -34,9 +37,7 @@ var app = express();
 // open mongoose connection
 mongoose.connect();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -53,7 +54,7 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Credentials", true );
   next();
 });
-app.use('/twitter', commonRouter);
+app.use('/twitter', twitterRouter);
 app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler

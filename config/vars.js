@@ -8,5 +8,6 @@ module.exports = {
   consumerSecret: process.env.consumerSecret,
   access_token: process.env.access_token,
   access_token_secret: process.env.access_token_secret,
-  callbackURL: process.env.callbackURL
+  callbackURL: process.env.callbackURL,
+  count: process.env.count 
 };

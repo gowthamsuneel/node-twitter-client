@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+mongoose.set('useFindAndModify', false);
 
 /**
  * Access Schema
@@ -20,6 +20,7 @@ const twitterSchema = new mongoose.Schema({
     }
 });
 
+/** Links  */
 const linksSchema = new mongoose.Schema({
     user: {
         type: Object
@@ -29,9 +30,23 @@ const linksSchema = new mongoose.Schema({
     }
 });
 
+/** User tokens */
+const tokenSchema = new mongoose.Schema({
+    user: {
+        type: String
+    },
+    token : {
+        type: String,
+    },
+    token_secret : {
+        type: String,
+    }
+});
+
 /**
  * @typedef Access
  */
-let Twitter = mongoose.model('Twitter', twitterSchema);
+let Twitter = mongoose.model('tweets', twitterSchema);
 let Links = mongoose.model('links', linksSchema);
-module.exports = {Twitter, Links}
+let Tokens = mongoose.model('tokens', tokenSchema);
+module.exports = { Twitter, Links, Tokens}
