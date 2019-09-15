@@ -7,7 +7,7 @@ Access twitter api's using nodejs
 - Clone this repository
 - Go to node-twitter-client folder
 - npm i
-- Create a twitter app - https://developer.twitter.com/en/apps (If you don not have twitter account, create a new)
+- Create a twitter app - https://developer.twitter.com/en/apps (If you don not have twitter developer account, create a new)
 - Update .env file with twitter app specifications
 - npm start
 
@@ -21,4 +21,5 @@ This is proof of concept to access twitter api is from client libraries like Nod
 - GET  - http://localhost:4000/twitter/data
 - GET - http://localhost:4000/twitter/links
 - POST - http://localhost:4000/twitter/filter
+    request data {location : 'Hyderabad'}
 
