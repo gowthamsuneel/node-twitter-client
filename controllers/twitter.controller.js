@@ -62,7 +62,7 @@ let filter = (req,res) =>{
  */
 let hashTag = (req,res) => {
   try {
-    dataFetch({'entities.hashtags': req.body.hashtags}).then(data=>{
+    dataFetch({'entities.hashtags': req.query.hashtags}).then(data=>{
       res.send(data);
     }).catch(err=>{
       res.send(err);
