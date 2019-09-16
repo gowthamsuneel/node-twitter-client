@@ -45,7 +45,8 @@ let dataFetch = (query) =>{
  */
 let filter = (req,res) =>{
   try {
-    dataFetch({'user.location': req.body.location}).then(data=>{
+    console.log(req.body)
+    dataFetch({'user.location': {'$in':req.body}}).then(data=>{
       res.send(data);
     }).catch(err=>{
       res.send(err);

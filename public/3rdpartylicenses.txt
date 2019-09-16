@@ -325,17 +325,33 @@ THE SOFTWARE.
 @angular/platform-browser
 MIT
 
+@angular/forms
+MIT
+
 @angular/router
 MIT
 
+@angular/material/bottom-sheet
+
 @angular/material/dialog
 
-@angular/forms
-MIT
+@angular/material/button
+
+@angular/material/datepicker
+
+@angular/material/tooltip
+
+@angular/material/snack-bar
+
+@angular/material/core
 
 @angular/material/card
 
 @angular/material/toolbar
+
+@angular/material/form-field
+
+@angular/material/select
 
 zone.js
 MIT
