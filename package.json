@@ -16,7 +16,7 @@
     "morgan": "~1.9.1",
     "passport": "^0.4.0",
     "passport-twitter": "^1.0.4",
-    "pug": "2.0.0-beta11",
+    "pug": "3.0.1",
     "twit": "^2.2.11",
     "util": "^0.12.1"
   }
